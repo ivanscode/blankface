@@ -3,6 +3,7 @@ from glob import glob
 from skimage import io
 import skimage.transform as st
 import numpy as np
+from multiprocessing.dummy import Pool as ThreadPool 
 
 def saveImage(image, path, folder):
     name = path.strip().split('/')[-1][:-4]
@@ -36,21 +37,7 @@ def findRight(image):
             if(image[k, j, 0] != 255 and image[k, j, 1] != 255 and image[k, j, 2] != 255):
                 return j
 
-image_folder = '/home/ivan/matlab/render'
-save_folder = '/home/ivan/crop/output'
-
-if not os.path.exists(save_folder):
-    os.mkdir(save_folder)
-
-
-types = ('*.jpg', '*.png')
-image_path_list= []
-for files in types:
-    image_path_list.extend(glob(os.path.join(image_folder, files)))
-total_num = len(image_path_list)
-print(image_path_list)
-
-for i, image_path in enumerate(image_path_list):
+def cropImage(image_path):
     image = io.imread(image_path)
 
     l = findLeft(image)
@@ -65,6 +52,25 @@ for i, image_path in enumerate(image_path_list):
     new_image = new_image.astype(np.uint8)
 
     saveImage(new_image, image_path, save_folder)
+
+image_folder = '/home/ivan/face-frontilization/Images/results_face'
+save_folder = '/home/ivan/crop/output'
+
+if not os.path.exists(save_folder):
+    os.mkdir(save_folder)
+
+
+types = ('*.jpg', '*.png')
+image_path_list= []
+for files in types:
+    image_path_list.extend(glob(os.path.join(image_folder, files)))
+total_num = len(image_path_list)
+
+pool = ThreadPool(8) 
+results = pool.map(cropImage, image_path_list)
+
+#for i, image_path in enumerate(image_path_list):
+    
 
 
 
