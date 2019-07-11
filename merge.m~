@@ -1,0 +1,35 @@
+clear
+clc
+imgs=textread('lfw160.txt','%s');
+
+cnt=30;
+
+nrof_big_img=floor(length(imgs)/(cnt^2));
+
+ind=1;
+for i=1:nrof_big_img
+    big_img=zeros(cnt*160,cnt*160,3,'uint8');
+    for j=1:cnt
+        for k=1:cnt
+            x=(j-1)*160+1:j*160;
+            y=(k-1)*160+1:k*160;
+            big_img(x,y,:)=imread(['lfw160/' imgs{ind}]);
+            ind=ind+1;
+        end
+    end
+    imsave(big_img,['lfw_160_merged/m' int2str(i) '.jpg']);
+end
+
+jCnt=30;
+kCnt=ceil((length(imgs)-nrof_big_img*(cnt^2))/jCnt);
+big_img=zeros(jCnt*160,kCnt*160,3,'uint8');
+for j=1:jCnt
+    for k=1:kCnt
+        x=(j-1)*160+1:j*160;
+        y=(k-1)*160+1:k*160;
+        big_img(x,y,:)=imread(['lfw160/' imgs{ind}]);
+        ind=ind+1;
+        if ind>
+    end
+end
+imsave(big_img,['lfw_160_merged/m' int2str(i) '.jpg']);
